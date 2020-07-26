@@ -1,19 +1,32 @@
 const { io } = require('../server')
+const { TicketControl } = require('../classes/ticket-control')
+const ticketControl = new TicketControl()
 
 io.on('connection', client => {
-	console.log('🖥 user connected ')
+	client.on('ticketNext', (newTicket, callback) => {
+		let next = ticketControl.ticketNext()
+		console.log(next)
 
-	client.on('disconnect', () => {
-		console.log('🔌 user disconnected')
+		client.broadcast.emit('ticketNext', next)
+		callback(next)
 	})
 
-	client.on('sendMessage', (message, callback) => {
-		if (message.user) {
-			client.broadcast.emit('sendMessage', message)
-			callback({ message: 'todo salio bien!' })
-		} else {
-			callback({ message: 'todo saliio mal!!!!!!!' })
+	client.on('getActualState', (current, callback) => {
+		let currentTicket = ticketControl.getCurrentTicket()
+
+		client.broadcast.emit('actualState', currentTicket)
+		callback(currentTicket)
+	})
+
+	client.on('attendticket', (data, callback) => {
+		if (!data.desktop) {
+			return callback({
+				err: true,
+				menssage: 'need assign a desktop',
+			})
 		}
+
+		let attendTicket = ticketControl.attendTicket(data.desktop)
+		callback(attendTicket)
 	})
-	client.emit('sendMessage', { user: 'server', message: 'welcome to sockets' })
 })
