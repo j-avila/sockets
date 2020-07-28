@@ -47,7 +47,10 @@ class TicketControl {
 	}
 
 	getCurrentTicket() {
-		return `ticket  ${this.last}`
+		return `ticket ${this.last}`
+	}
+	getLastFour() {
+		return this.lastFour
 	}
 
 	attendTicket(desktop) {
@@ -63,10 +66,10 @@ class TicketControl {
 		this.lastFour.unshift(attendTicket)
 
 		if (this.lastFour.length > 4) {
-			this.lastFour(-1, 1)
+			this.lastFour.splice(-1, 1)
 		}
 
-		console.log(this.lastFour)
+		// console.log(this.lastFour)
 		this.saveCounter()
 		return attendTicket
 	}

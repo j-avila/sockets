@@ -17,6 +17,15 @@ $('strong').text(desktop)
 
 $('button').on('click', function () {
 	socket.emit('attendticket', { desktop }, resp => {
-		console.log(resp)
+		if (resp === 'theres no tickets') {
+			label.text
+			alert(resp)
+			return
+		}
+		$('small').text(resp.number)
+		socket.emit('getActualState', null, state => {
+			console.log(state)
+			return state
+		})
 	})
 })

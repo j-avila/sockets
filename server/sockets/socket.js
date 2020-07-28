@@ -7,15 +7,21 @@ io.on('connection', client => {
 		let next = ticketControl.ticketNext()
 		console.log(next)
 
-		client.broadcast.emit('ticketNext', next)
+		// client.broadcast.emit('getActualState', next)
 		callback(next)
 	})
 
 	client.on('getActualState', (current, callback) => {
 		let currentTicket = ticketControl.getCurrentTicket()
+		let lastFour = ticketControl.getLastFour()
 
-		client.broadcast.emit('actualState', currentTicket)
-		callback(currentTicket)
+		let actualState = {
+			currentTicket: currentTicket,
+			lastFour: lastFour,
+		}
+
+		client.broadcast.emit('actualState', actualState)
+		callback(actualState)
 	})
 
 	client.on('attendticket', (data, callback) => {

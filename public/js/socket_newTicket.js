@@ -4,7 +4,8 @@ let label = $('#lblNuevoTicket')
 socket.on('connect', () => {
 	console.log('🖥 connected ')
 	socket.emit('getActualState', null, state => {
-		label.text(state)
+		// console.log(state)
+		label.text(state.currentTicket)
 	})
 })
 
@@ -12,7 +13,7 @@ socket.on('disconnect', () => {
 	console.log('🔌 disconnected ')
 })
 
-$('button').on('click', function () {
+$('button').on('click', () => {
 	socket.emit('ticketNext', null, next => {
 		label.text(next)
 	})
